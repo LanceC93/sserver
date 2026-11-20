@@ -3,31 +3,45 @@ package main
 import (
 	"fmt"
 	"strings"
-	server "github.com/LanceC93/sserver/server"
-	client "github.com/LanceC93/sserver/client"
+	chat "github.com/LanceC93/sserver/chat"
+	"os"
 )
 
 type Server interface {
 	StartServer()
-}
-
-type Client interface {
 	StartClient()
 }
 
+var serverTypes = map[string]Server {
+	"chat": chat.Chat{},
+	"proxy": nil,
+}
+
 func main() {
-	
+
+	if len(os.Args) < 2 {
+		fmt.Printf("No arguments passed.")
+		return
+	}
+
+	serveType := os.Args[1]
+
+	if _, exists := serverTypes[serveType]; !exists {
+		fmt.Printf("Invalid Argument.")
+		return
+	}
+
+
 	fmt.Printf("(s)erver or (c)lient: ")
 	var input string
 	fmt.Scan(&input)
+	var s Server = serverTypes[serveType]
 
 	switch strings.ToLower(input) {
 		case "server", "s":
-			var s Server = server.Chat{}
 			s.StartServer()
 		case "client", "c":
-			var c Client = client.Chat{}
-			c.StartClient()
+			s.StartClient()
 		default:
 			fmt.Printf("Invalid input.")
 	}

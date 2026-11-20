@@ -1,4 +1,4 @@
-package client
+package chat
 
 import (
 	"fmt"
@@ -10,14 +10,6 @@ import (
 	"sync/atomic"
 	"os"
 )
-
-const (
-	SERVER_HOST="localhost"
-	SERVER_PORT="9988"
-	SERVER_TYPE="tcp"
-)
-
-type Chat struct {}
 
 //create client
 func (Chat) StartClient() {
