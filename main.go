@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"strings"
 	chat "github.com/LanceC93/sserver/chat"
 	"os"
+	"flag"
 )
 
 type Server interface {
@@ -18,32 +18,27 @@ var serverTypes = map[string]Server {
 }
 
 func main() {
+	isServer := flag.Bool("s", false, "is this a server.")
+	flag.Parse()
 
 	if len(os.Args) < 2 {
 		fmt.Printf("No arguments passed.")
 		return
 	}
 
-	serveType := os.Args[1]
+	serveType := flag.Arg(0)
 
 	if _, exists := serverTypes[serveType]; !exists {
 		fmt.Printf("Invalid Argument.")
 		return
 	}
 
-
-	fmt.Printf("(s)erver or (c)lient: ")
-	var input string
-	fmt.Scan(&input)
 	var s Server = serverTypes[serveType]
 
-	switch strings.ToLower(input) {
-		case "server", "s":
-			s.StartServer()
-		case "client", "c":
-			s.StartClient()
-		default:
-			fmt.Printf("Invalid input.")
+	if *isServer {
+		s.StartServer()
+	} else {
+		s.StartClient()
 	}
 }
 

@@ -9,14 +9,17 @@ import (
 	"io"
 	"sync/atomic"
 	"os"
+	"time"
 )
 
 //create client
 func (Chat) StartClient() {
 	//start connection
-	conn, err := net.Dial(SERVER_TYPE, SERVER_HOST+":"+SERVER_PORT)
+	conn, err := net.DialTimeout(SERVER_TYPE, SERVER_HOST+":"+SERVER_PORT, 3*time.Second)
+	
 	if err != nil {
-		fmt.Errorf("Unable to connect to %s:%s: %s", SERVER_HOST, SERVER_PORT, err)
+		fmt.Printf("Unable to connect to %s:%s (%s)", SERVER_HOST, SERVER_PORT, err)
+		return
 	}
 	fmt.Printf("Connection established. (q)uit to exit\n")
 	
